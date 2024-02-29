@@ -12,7 +12,7 @@ SimulationIterator::SimulationIterator() {
 	iterationLogger = 0;
 	totalIterations = (uint32_t)std::round((end - start) / step);
 	desiredLogEntries = config::desiredLogEntries - 1;
-	maxDigits = valueLen(desiredLogEntries);
+	maxDigits = digitsInValue(desiredLogEntries);
 	logEvery = (uint32_t)round((double)totalIterations / (double)desiredLogEntries);
 	logThisStep = 0;
 	stopSimulation = 0;
@@ -39,7 +39,7 @@ void SimulationIterator::advance() {
 	}
 }
 
-uint32_t SimulationIterator::valueLen(uint32_t x) {
+uint32_t SimulationIterator::digitsInValue(uint32_t x) const {
 	std::string str = std::to_string(x);
 	uint32_t length = 0;
 	size_t iMax = str.length();

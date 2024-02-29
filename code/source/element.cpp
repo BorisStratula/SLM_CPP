@@ -2,23 +2,23 @@
 #include "../include/config.h"
 #include "../include/mesh.h"
 #include "../include/laser.h"
+#include "../include/intvec3.h"
 
 //Elem::Elem() {
 //
 //}
 
-Elem::Elem(uint32_t _ID, IntVec3 _indexVector, Neighbours _neighbours, Neighbours _neighboursTruncated, std::string _state) {
+Elem::Elem(uint32_t _ID, const IntVec3& INDEX_VECTOR, const Neighbours& NEIGHBOURS, const Neighbours& NEIGHBOURS_TRUNCATED, const std::string& STATE) {
 	ID = _ID;
 	vertices = std::vector<uint32_t>(8);
-	neighbours = _neighbours;
-	neighboursTruncated = _neighboursTruncated;
+	neighbours = NEIGHBOURS;
+	neighboursTruncated = NEIGHBOURS_TRUNCATED;
 	onSurface = neighboursTruncated.onSurface;
-	vec = config::meshStep.dot(_indexVector);
+	vec = config::meshStep.dot(INDEX_VECTOR);
 	T = config::initialTemp;
-	state = _state;
+	state = STATE;
 	underLaser = 0;
 	timesMelted = 0;
-	// TODO Fix This
 	k = thermalConductivity();
 	H = HofT();
 	HFlow = 0;
@@ -30,7 +30,7 @@ Elem::~Elem() {
 
 }
 
-double Elem::thermalConductivity() {
+double Elem::thermalConductivity() const {
 	double sigmoidConst = 1;
 	if (state == "powder") sigmoidConst = config::sigmoidConst;
 	if (T == config::meltingTemp) {
@@ -57,13 +57,13 @@ double Elem::thermalConductivity() {
 	}
 }
 
-double Elem::TofH() {
+double Elem::TofH() const {
 	if (H < config::enthalpyMinus) return H * config::mscsRev;
 	else if (H > config::enthalpyMinus and H <= config::enthalpyPlus) return config::meltingTemp;
 	else return config::meltingTemp + (H - config::enthalpyPlus) * config::mlclRev;
 }
 
-double Elem::HofT() {
+double Elem::HofT() const {
 	if (T > config::meltingTemp) return config::mlcl * (T - config::meltingTemp) + config::enthalpyPlus;
 	else return config::mscs * T;
 }
@@ -83,7 +83,7 @@ double Elem::enthalpyFlow(const Mesh* const MESH, const Laser* const LASER) {
 	return enthalpyFlow;
 }
 
-double Elem::thetaI(int32_t forwardID, int32_t backwardID, uint32_t axis, const Mesh* const MESH) {
+double Elem::thetaI(int32_t forwardID, int32_t backwardID, uint32_t axis, const Mesh* const MESH) const {
 	double h;
 	if (axis == 1) h = config::meshStep.x;
 	else if (axis == 2) h = config::meshStep.y;
@@ -92,15 +92,15 @@ double Elem::thetaI(int32_t forwardID, int32_t backwardID, uint32_t axis, const 
 	return (thetaF(forwardID, MESH) - thetaB(backwardID, MESH)) / divider;
 }
 
-double Elem::thetaF(int32_t forwardID, const Mesh* const MESH) {
+double Elem::thetaF(int32_t forwardID, const Mesh* const MESH) const {
 	return (MESH->elems[forwardID].k + k) * (MESH->elems[forwardID].T - T);
 }
 
-double Elem::thetaB(int32_t backwardID, const Mesh* const MESH) {
+double Elem::thetaB(int32_t backwardID, const Mesh* const MESH) const {
 	return (k + MESH->elems[backwardID].k) * (T - MESH->elems[backwardID].T);
 }
 
-double Elem::radiantFlux() {
+double Elem::radiantFlux() const {
 	if (onSurface == 0) return 0;
 	else return onSurface * config::surfaceArea * config::radiantFluxConst * (T * T * T * T - config::airTemp4);
 }

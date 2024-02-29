@@ -2,25 +2,25 @@
 #include "../include/vec3.h"
 
 
-//Neighbours::Neighbours() {
-//	xMinus = 0;
-//	xPlus = 0;
-//	yMinus = 0;
-//	yPlus = 0;
-//	zMinus = 0;
-//	zPlus = 0;
-//	origin = 0;
-//	onSurface = 0;
-//}
+Neighbours::Neighbours() {
+	xMinus = 0;
+	xPlus = 0;
+	yMinus = 0;
+	yPlus = 0;
+	zMinus = 0;
+	zPlus = 0;
+	origin = 0;
+	onSurface = 0;
+}
 
 
-Neighbours::Neighbours(IntVec3 indexVec, uint32_t ID, IntVec3 resolution) {
-	xMinus = xMinusID(indexVec, ID);
-	xPlus = xPlusID(indexVec, ID, resolution);
-	yMinus = yMinusID(indexVec, ID, resolution);
-	yPlus = yPlusID(indexVec, ID, resolution);
-	zMinus = zMinusID(indexVec, ID, resolution);
-	zPlus = zPlusID(indexVec, ID, resolution);
+Neighbours::Neighbours(const IntVec3& INDEX_VEC, uint32_t ID, const IntVec3& RESOLUTION) {
+	xMinus = xMinusID(INDEX_VEC, ID);
+	xPlus = xPlusID(INDEX_VEC, ID, RESOLUTION);
+	yMinus = yMinusID(INDEX_VEC, ID, RESOLUTION);
+	yPlus = yPlusID(INDEX_VEC, ID, RESOLUTION);
+	zMinus = zMinusID(INDEX_VEC, ID, RESOLUTION);
+	zPlus = zPlusID(INDEX_VEC, ID, RESOLUTION);
 	origin = (int32_t)ID;
 	onSurface = 0;
 }
@@ -31,8 +31,8 @@ Neighbours::~Neighbours() {
 }
 
 
-int32_t Neighbours::xMinusID(IntVec3 indexVec, uint32_t ID) {
-	if (indexVec.x == 0) {
+int32_t Neighbours::xMinusID(const IntVec3& INDEX_VEC, uint32_t ID) const {
+	if (INDEX_VEC.x == 0) {
 		return -1;
 	}
 	else {
@@ -40,8 +40,8 @@ int32_t Neighbours::xMinusID(IntVec3 indexVec, uint32_t ID) {
 	}
 }
 
-int32_t Neighbours::xPlusID(IntVec3 indexVec, uint32_t ID, IntVec3 resolution) {
-	if (indexVec.x == resolution.x - 1) {
+int32_t Neighbours::xPlusID(const IntVec3& INDEX_VEC, uint32_t ID, const IntVec3& RESOLUTION) const {
+	if (INDEX_VEC.x == RESOLUTION.x - 1) {
 		return -1;
 	}
 	else {
@@ -49,39 +49,39 @@ int32_t Neighbours::xPlusID(IntVec3 indexVec, uint32_t ID, IntVec3 resolution) {
 	}
 }
 
-int32_t Neighbours::yMinusID(IntVec3 indexVec, uint32_t ID, IntVec3 resolution) {
-	if (indexVec.y == 0) {
+int32_t Neighbours::yMinusID(const IntVec3& INDEX_VEC, uint32_t ID, const IntVec3& RESOLUTION) const {
+	if (INDEX_VEC.y == 0) {
 		return -1;
 	}
 	else {
-		return ID - resolution.x;
+		return ID - RESOLUTION.x;
 	}
 }
 
-int32_t Neighbours::yPlusID(IntVec3 indexVec, uint32_t ID, IntVec3 resolution) {
-	if (indexVec.y == resolution.y - 1) {
+int32_t Neighbours::yPlusID(const IntVec3& INDEX_VEC, uint32_t ID, const IntVec3& RESOLUTION) const {
+	if (INDEX_VEC.y == RESOLUTION.y - 1) {
 		return -1;
 	}
 	else {
-		return ID + resolution.x;
+		return ID + RESOLUTION.x;
 	}
 }
 
-int32_t Neighbours::zMinusID(IntVec3 indexVec, uint32_t ID, IntVec3 resolution) {
-	if (indexVec.z == 0) {
+int32_t Neighbours::zMinusID(const IntVec3& INDEX_VEC, uint32_t ID, const IntVec3& RESOLUTION) const {
+	if (INDEX_VEC.z == 0) {
 		return -1;
 	}
 	else {
-		return ID - resolution.x * resolution.y;
+		return ID - RESOLUTION.x * RESOLUTION.y;
 	}
 }
 
-int32_t Neighbours::zPlusID(IntVec3 indexVec, uint32_t ID, IntVec3 resolution) {
-	if (indexVec.z == resolution.z - 1) {
+int32_t Neighbours::zPlusID(const IntVec3& INDEX_VEC, uint32_t ID, const IntVec3& RESOLUTION) const {
+	if (INDEX_VEC.z == RESOLUTION.z - 1) {
 		return -1;
 	}
 	else {
-		return ID + resolution.x * resolution.y;
+		return ID + RESOLUTION.x * RESOLUTION.y;
 	}
 }
 

@@ -26,11 +26,11 @@ void Timer::update() {
 	timeCumulative = timeMSK() - timeOfStart;
 }
 
-uint32_t Timer::today(double seconds) {
+uint32_t Timer::today(double seconds) const {
 	return (uint32_t)(floor(seconds / 86400.0) * 86400.0);
 }
 
-double Timer::timeMSK() {
+double Timer::timeMSK() const {
 	std::timespec timeSpec;
 	if (std::timespec_get(&timeSpec, TIME_UTC) == 0) {
 		return 10;
@@ -76,7 +76,7 @@ std::string Timer::formatETA(uint32_t iterationsNow, uint32_t iterationsTotal) {
 	return timeETA;
 }
 
-std::string Timer::formatTime(double seconds) {
+std::string Timer::formatTime(double seconds) const {
 	double d_ref = 86400.0;
 	double h_ref = 3600.0;
 	double m_ref = 60.0;

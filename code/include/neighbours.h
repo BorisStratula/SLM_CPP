@@ -15,15 +15,15 @@ public:
 	int32_t origin;
 	uint32_t onSurface;
 
-	Neighbours() = default;
-	Neighbours(IntVec3 indexVec, uint32_t ID, IntVec3 resolution);
+	Neighbours();
+	Neighbours(const IntVec3& INDEX_VEC, uint32_t ID, const IntVec3& RESOLUTION);
 	~Neighbours();
 
-	int32_t xMinusID(IntVec3 indexVec, uint32_t ID);
-	int32_t xPlusID(IntVec3 indexVec, uint32_t ID, IntVec3 resolution);
-	int32_t yMinusID(IntVec3 indexVec, uint32_t ID, IntVec3 resolution);
-	int32_t yPlusID(IntVec3 indexVec, uint32_t ID, IntVec3 resolution);
-	int32_t zMinusID(IntVec3 indexVec, uint32_t ID, IntVec3 resolution);
-	int32_t zPlusID(IntVec3 indexVec, uint32_t ID, IntVec3 resolution);
+	int32_t xMinusID(const IntVec3& INDEX_VEC, uint32_t ID) const;
+	int32_t xPlusID(const IntVec3& INDEX_VEC, uint32_t ID, const IntVec3& RESOLUTION) const;
+	int32_t yMinusID(const IntVec3& INDEX_VEC, uint32_t ID, const IntVec3& RESOLUTION) const;
+	int32_t yPlusID(const IntVec3& INDEX_VEC, uint32_t ID, const IntVec3& RESOLUTION) const;
+	int32_t zMinusID(const IntVec3& INDEX_VEC, uint32_t ID, const IntVec3& RESOLUTION) const;
+	int32_t zPlusID(const IntVec3& INDEX_VEC, uint32_t ID, const IntVec3& RESOLUTION) const;
 	void truncate();
 };

@@ -2,6 +2,7 @@
 #include <math.h>
 #include "../include/laser.h"
 #include "../include/config.h"
+#include "../include/element.h"
 
 Laser::Laser() {
 	vec = config::laserVec;

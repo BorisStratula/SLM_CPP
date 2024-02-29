@@ -25,6 +25,6 @@ public:
 	~SimulationIterator();
 
 	void advance();
-	uint32_t valueLen(uint32_t x);
+	uint32_t digitsInValue(uint32_t x) const;
 	std::string info();
 };

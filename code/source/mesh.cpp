@@ -6,14 +6,14 @@
 #include "../include/laser.h"
 
 Mesh::Mesh() {
-	nodes = std::vector<Node>();
-	elems = std::vector<Elem>();
 	int32_t xRes = (uint32_t)round(config::bodySize.x / config::meshStep.x);
 	int32_t yRes = (uint32_t)round(config::bodySize.y / config::meshStep.y);
 	int32_t zRes = (uint32_t)round(config::bodySize.z / config::meshStep.z);
 	resolution = IntVec3(xRes, yRes, zRes);
 	powderLayers = (uint32_t)round(config::powderThickness / config::meshStep.z);
 	startPowderAtLayer = (uint32_t)resolution.z - powderLayers;
+	nodes = std::vector<Node>();
+	elems = std::vector<Elem>();
 	createMesh();
 }
 
@@ -33,19 +33,19 @@ void Mesh::advance(const Laser* const LASER) {
 	}
 }
 
-void Mesh::createElement(IntVec3 indexVec, Neighbours neighbours, Neighbours neighboursTruncated, std::string state) {
+void Mesh::createElement(const IntVec3& INDEX_VEC, const Neighbours& NEIGHBOURS, const Neighbours& NEIGHBOURS_TRUNCATED, const std::string& STATE) {
 	uint32_t ID = (uint32_t)elems.size();
 	uint32_t nodeID;
-	Elem newElem = Elem(ID, indexVec, neighbours, neighboursTruncated, state);
+	Elem newElem = Elem(ID, INDEX_VEC, NEIGHBOURS, NEIGHBOURS_TRUNCATED, STATE);
 	for (uint32_t nodePos = 0; nodePos < 8; nodePos++) {
-		nodeID = findNodeForElement(nodePos, newElem.vec, neighbours);
+		nodeID = findNodeForElement(nodePos, newElem.vec, NEIGHBOURS);
 		newElem.vertices[nodePos] = nodeID;
 	}
 	elems.push_back(newElem);
 }
 
-void Mesh::createNode(uint32_t nodePos, Vec3 anchorVec) {
-	Vec3 vec = Node::nodalVec(nodePos, anchorVec);
+void Mesh::createNode(uint32_t nodePos, const Vec3& ANCHOR_VEC) {
+	Vec3 vec = Node::nodalVec(nodePos, ANCHOR_VEC);
 	uint32_t ID = (uint32_t)nodes.size();
 	nodes.push_back(Node(ID, vec));
 }
@@ -84,7 +84,7 @@ void Mesh::createMesh() {
 		for (indexVector.y = 0; indexVector.y < resolution.y; indexVector.y++) {
 			for (indexVector.x = 0; indexVector.x < resolution.x; indexVector.x++) {
 				neighbours = Neighbours(indexVector, ID, resolution);
-				neighboursTruncated = neighbours;//Neighbours(indexVector, ID, resolution);
+				neighboursTruncated = neighbours;
 				neighboursTruncated.truncate();
 				createElement(indexVector, neighbours, neighboursTruncated, state);
 				ID += 1;

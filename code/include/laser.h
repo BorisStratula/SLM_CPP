@@ -2,7 +2,8 @@
 
 #include <string>
 #include "vec3.h"
-#include "element.h"
+
+class Elem;
 
 class Laser {
 public:
