@@ -1,8 +1,8 @@
 #include "../include/body_data.h"
 
 BodyData::BodyData(const Mesh* const MESH) {
-	totalNodes = (uint32_t)MESH->nodes.size();
-	totalElems = (uint32_t)MESH->elems.size();
+	totalNodes = MESH->nodesArraySize;
+	totalElems = MESH->elemsArraySize;
 	nodalID = std::vector<double>(totalNodes);
 	nodalCoords = std::vector<double>(totalNodes * 3);
 	elemID = std::vector<double>(totalElems);
@@ -10,22 +10,45 @@ BodyData::BodyData(const Mesh* const MESH) {
 	H = std::vector<double>(totalElems);
 	k = std::vector<double>(totalElems);
 	T = std::vector<double>(totalElems);
-	TMax = 0;
 	state = std::vector<double>(totalElems);
 	underLaser = std::vector<double>(totalElems);
 	qDebug = std::vector<double>(totalElems);
 	MDebug = std::vector<double>(totalElems);
 	timesMelted = std::vector<double>(totalElems);
+	//nodalID = new double[totalNodes];
+	//nodalCoords = new double[totalNodes * 3];
+	//elemID = new double[totalElems];
+	//elemVertices = new int[totalElems * 8];
+	//H = new double[totalElems];
+	//k = new double[totalElems];
+	//T = new double[totalElems];
+	//state = new double[totalElems];
+	//underLaser = new double[totalElems];
+	//qDebug = new double[totalElems];
+	//MDebug = new double[totalElems];
+	//timesMelted = new double[totalElems];
+	TMax = 0;
 	extractMeshData(MESH);
 	advance(MESH);
 }
 
 BodyData::~BodyData() {
-
+	//delete[] nodalID;
+	//delete[] nodalCoords;
+	//delete[] elemID;
+	//delete[] elemVertices;
+	//delete[] H;
+	//delete[] k;
+	//delete[] T;
+	//delete[] state;
+	//delete[] underLaser;
+	//delete[] qDebug;
+	//delete[] MDebug;
+	//delete[] timesMelted;
 }
 
 void BodyData::advance(const Mesh* const MESH) {
-	uint32_t totalElems = (uint32_t)MESH->elems.size();
+	uint32_t totalElems = MESH->elemsArraySize;
 	TMax = 0;
 	for (uint32_t elem = 0; elem < totalElems; elem++) {
 		H[elem] = MESH->elems[elem].H;

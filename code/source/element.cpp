@@ -10,7 +10,7 @@
 
 Elem::Elem(uint32_t _ID, const IntVec3& INDEX_VECTOR, const Neighbours& NEIGHBOURS, const Neighbours& NEIGHBOURS_TRUNCATED, const std::string& STATE) {
 	ID = _ID;
-	vertices = std::vector<uint32_t>(8);
+	vertices = new uint32_t[8];
 	neighbours = NEIGHBOURS;
 	neighboursTruncated = NEIGHBOURS_TRUNCATED;
 	onSurface = neighboursTruncated.onSurface;
@@ -27,7 +27,8 @@ Elem::Elem(uint32_t _ID, const IntVec3& INDEX_VECTOR, const Neighbours& NEIGHBOU
 }
 
 Elem::~Elem() {
-
+	// TODO fix the issue when destructor is called afterevery elem creation
+	//delete[] vertices;
 }
 
 double Elem::thermalConductivity() const {

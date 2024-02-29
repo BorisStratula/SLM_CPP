@@ -13,7 +13,7 @@ class IntVec3;
 class Elem {
 public:
 	uint32_t ID;
-	std::vector<uint32_t> vertices;
+	uint32_t* vertices;
 	Neighbours neighbours;
 	Neighbours neighboursTruncated;
 	uint32_t onSurface = neighboursTruncated.onSurface;
