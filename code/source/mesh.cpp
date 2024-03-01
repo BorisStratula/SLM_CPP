@@ -1,7 +1,7 @@
 #include <iostream>
+#include "../../lib/include/timer.h"
 #include "../include/mesh.h"
 #include "../include/config.h"
-#include "../include/timer.h"
 #include "../include/laser.h"
 #include "../include/body_data.h"
 

@@ -75,13 +75,13 @@ void BodyData::advance(const Mesh* const MESH) {
 }
 
 void BodyData::extractMeshData(const Mesh* const MESH) {
-	for (uint32_t node = 0; node < totalNodes; node++) {
+	for (size_t node = 0; node < totalNodes; node++) {
 		nodalID[node] = (double)node;
 		nodalCoords[node * 3 + 0] = (double)MESH->nodes[node].vec.x;
 		nodalCoords[node * 3 + 1] = (double)MESH->nodes[node].vec.y;
 		nodalCoords[node * 3 + 2] = (double)MESH->nodes[node].vec.z;
 	}
-	for (uint32_t elem = 0; elem < totalElems; elem++) {
+	for (size_t elem = 0; elem < totalElems; elem++) {
 		elemID[elem] = (double)elem;
 		for (uint32_t i = 0; i < 8; i++) {
 			elemVertices[elem * 8 + i] = (int)MESH->elems[elem].vertices[i];

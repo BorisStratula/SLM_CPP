@@ -1,5 +1,4 @@
 #include "../include/neighbours.h"
-#include "../include/vec3.h"
 
 
 Neighbours::Neighbours() {

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <stdint.h>
-#include "vec3.h"
-#include "intvec3.h"
+#include "../../lib/include/vec3.h"
+#include "../../lib/include/intvec3.h"
 #include "node.h"
 #include "element.h"
 

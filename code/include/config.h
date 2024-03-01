@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 #include <string>
-#include "vec3.h"
+#include "../../lib/include/vec3.h"
 
 namespace config {
 	//path
@@ -16,10 +16,10 @@ namespace config {
 	//time
 	const double startTime = 0.0;
 	const double timeStep = 1e-10;
-	const double endTime = timeStep * 1000.0;
+	const double endTime = timeStep * 1000000.0;
 
 	// logging
-	const uint32_t desiredLogEntries = 2;
+	const uint32_t desiredLogEntries = 100;
 
 	// temperatures
 	const double airTemp = 293.0;

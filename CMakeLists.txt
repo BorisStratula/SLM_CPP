@@ -13,18 +13,21 @@ project ("slm_cpp")
 
 set(SOURCES
 	"main.cpp"
+
+	"lib/source/intvec3.cpp" 
+	"lib/source/lean_vtk.cpp"
+	"lib/source/Process.cpp"
+	"lib/source/timer.cpp"
+	"lib/source/vec3.cpp"
+
 	"code/source/body_data.cpp"
 	"code/source/data_writer.cpp"
 	"code/source/element.cpp"
-	"code/source/intvec3.cpp" 
 	"code/source/laser.cpp" 
-	"code/source/lean_vtk.cpp"
 	"code/source/mesh.cpp" 
 	"code/source/neighbours.cpp"
 	"code/source/node.cpp" 
 	"code/source/simulation.cpp"
-	"code/source/timer.cpp"
-	"code/source/vec3.cpp"
 	)
 
 # Add source to this project's executable.

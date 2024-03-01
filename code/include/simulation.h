@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 #include <string>
-#include "timer.h"
+#include "../../lib/include/timer.h"
 
 
 class SimulationIterator {

@@ -1,8 +1,8 @@
+#include "../../lib/include/intvec3.h"
 #include "../include/element.h"
 #include "../include/config.h"
 #include "../include/mesh.h"
 #include "../include/laser.h"
-#include "../include/intvec3.h"
 
 Elem::~Elem() {
 	if (vertices) {

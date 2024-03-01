@@ -1,7 +1,7 @@
 #include <iostream>
 #include <filesystem>
+#include "../../lib/include/lean_vtk.hpp"
 #include "../include/data_writer.h"
-#include "../include/lean_vtk.hpp"
 #include "../include/config.h"
 
 DataWriter::DataWriter() {

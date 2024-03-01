@@ -1,10 +1,8 @@
 #pragma once
 
 #include <stdint.h>
-#include <string>
-#include <vector>
+#include "../../lib/include/vec3.h"
 #include "neighbours.h"
-#include "vec3.h"
 
 class Mesh;
 class Laser;

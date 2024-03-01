@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 
+#include "lib/include/Process.h"
+
 #include "code/include/simulation.h"
 #include "code/include/laser.h"
 #include "code/include/mesh.h"

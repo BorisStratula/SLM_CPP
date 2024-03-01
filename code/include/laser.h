@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "vec3.h"
+#include "../../lib/include/vec3.h"
 
 class Elem;
 
