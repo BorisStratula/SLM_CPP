@@ -2,9 +2,10 @@
 #include <filesystem>
 #include "../include/data_writer.h"
 #include "../include/lean_vtk.hpp"
+#include "../include/config.h"
 
 DataWriter::DataWriter() {
-    projectDir = "C:/del/03";
+    projectDir = config::projectDir;
     solutionDir = projectDir + "/solution";
     prepareDir();
 }
@@ -24,7 +25,7 @@ void DataWriter::prepareDir() const {
     }
     catch (...) {
         std::cout << "Close solution files first\n";
-        std::exit(-1);
+        std::exit(1);
     }
     std::filesystem::create_directory(projectDir);
     std::filesystem::create_directory(solutionDir);

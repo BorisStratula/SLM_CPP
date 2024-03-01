@@ -12,25 +12,26 @@ class IntVec3;
 
 class Elem {
 public:
-	uint32_t ID;
-	uint32_t* vertices;
+	uint32_t ID = 0;
+	uint32_t* vertices = nullptr;
 	Neighbours neighbours;
 	Neighbours neighboursTruncated;
-	uint32_t onSurface = neighboursTruncated.onSurface;
+	uint32_t onSurface = 0;
 	Vec3 vec;
-	double T;
-	std::string state;
-	uint32_t underLaser;
-	uint32_t timesMelted;
-	double k;
-	double H;
-	double HFlow;
-	double qDebug;
-	double MDebug;
+	uint32_t state = 0; // 0 == powder, 1 == liquid, 2 == solid
+	uint32_t underLaser = 0;
+	uint32_t timesMelted = 0;
+	double T = 0.0;
+	double k = 0.0;
+	double H = 0.0;
+	double HFlow = 0.0;
+	double qDebug = 0.0;
+	double MDebug = 0.0;
 
-	Elem() = default;
-	Elem(uint32_t ID, const IntVec3& INDEX_VECTOR, const Neighbours& NEIGHBOURS, const Neighbours& NEIGHBOURS_TRUNCATED, const std::string& STATE);
 	~Elem();
+
+	bool init(uint32_t ID, const IntVec3& INDEX_VECTOR, const Neighbours& NEIGHBOURS, const Neighbours& NEIGHBOURS_TRUNCATED, const uint32_t STATE);
+	bool valid() const;
 
 	double thermalConductivity() const;
 	double TofH() const;

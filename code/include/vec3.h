@@ -1,6 +1,5 @@
 #pragma once
 
-#include <stdint.h>
 #include "intvec3.h"
 
 class Vec3 {

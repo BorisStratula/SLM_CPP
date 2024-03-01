@@ -4,36 +4,40 @@
 #include "../include/laser.h"
 #include "../include/intvec3.h"
 
-//Elem::Elem() {
-//
-//}
+Elem::~Elem() {
+	if (vertices) {
+		delete[] vertices;
+		vertices = nullptr;
+	}
+}
 
-Elem::Elem(uint32_t _ID, const IntVec3& INDEX_VECTOR, const Neighbours& NEIGHBOURS, const Neighbours& NEIGHBOURS_TRUNCATED, const std::string& STATE) {
+bool Elem::init(uint32_t _ID, const IntVec3& INDEX_VECTOR, const Neighbours& NEIGHBOURS, const Neighbours& NEIGHBOURS_TRUNCATED, const uint32_t STATE) {
+	if (vertices != nullptr) return false;
 	ID = _ID;
 	vertices = new uint32_t[8];
 	neighbours = NEIGHBOURS;
 	neighboursTruncated = NEIGHBOURS_TRUNCATED;
 	onSurface = neighboursTruncated.onSurface;
 	vec = config::meshStep.dot(INDEX_VECTOR);
-	T = config::initialTemp;
 	state = STATE;
 	underLaser = 0;
 	timesMelted = 0;
+	T = config::initialTemp;
 	k = thermalConductivity();
 	H = HofT();
-	HFlow = 0;
-	qDebug = 0;
-	MDebug = 0;
+	HFlow = 0.0;
+	qDebug = 0.0;
+	MDebug = 0.0;
+	return true;
 }
 
-Elem::~Elem() {
-	// TODO fix the issue when destructor is called afterevery elem creation
-	//delete[] vertices;
+bool Elem::valid() const {
+	return vertices != nullptr;
 }
 
 double Elem::thermalConductivity() const {
 	double sigmoidConst = 1;
-	if (state == "powder") sigmoidConst = config::sigmoidConst;
+	if (state == 0) sigmoidConst = config::sigmoidConst;
 	if (T == config::meltingTemp) {
 		double a1 = config::solidKA;
 		double b1 = config::solidKB;
@@ -108,14 +112,14 @@ double Elem::radiantFlux() const {
 
 void Elem::chechState() {
 	if (T > config::meltingTemp) {
-		if (state == "solid" or state == "powder") {
-			state = "liquid";
+		if (state == 2 or state == 0) {
+			state = 1;
 			timesMelted += 1;
 		}
 	}
 	if (T < config::meltingTemp) {
-		if (state == "liquid") {
-			state = "solid";
+		if (state == 1) {
+			state = 2;
 		}
 	}
 }

@@ -24,7 +24,7 @@ void Laser::advance() {
 
 double Laser::heatToElem(Elem* const ELEM) const {
 	double distance = (vec - ELEM->vec).len();
-	if (state == "off") {
+	if (!state) {
 		return 0;
 	}
 	else if (distance > radius) {

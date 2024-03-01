@@ -1,5 +1,4 @@
 #include <iostream>
-#include <format>
 #include "../include/simulation.h"
 #include "../include/config.h"
 

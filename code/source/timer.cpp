@@ -1,7 +1,7 @@
 #include <format>
 #include <iostream>
+#include <ctime>
 #include <stdint.h>
-#include <stdio.h>
 #include <math.h>
 #include "../include/timer.h"
 

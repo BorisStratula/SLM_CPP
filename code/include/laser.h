@@ -13,7 +13,7 @@ public:
 	double radius;
 	double power;
 	double precalcConst;
-	std::string state;
+	bool state;
 
 	Laser();
 	~Laser();

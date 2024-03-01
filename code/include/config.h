@@ -5,18 +5,21 @@
 #include "vec3.h"
 
 namespace config {
+	//path
+	const std::string projectDir = "C:/del/03";
+
 	// geometry
-	const Vec3 bodySize = Vec3(900e-6, 300e-6, 300e-6);
+	const Vec3 bodySize = Vec3(6000e-6, 20e-6, 600e-6);
 	const Vec3 meshStep = Vec3(20e-6, 20e-6, 20e-6);
 	const double powderThickness = 100e-6;
 
 	//time
 	const double startTime = 0.0;
 	const double timeStep = 1e-10;
-	const double endTime = timeStep * 1000000.0;
+	const double endTime = timeStep * 1000.0;
 
 	// logging
-	const uint32_t desiredLogEntries = 100;
+	const uint32_t desiredLogEntries = 2;
 
 	// temperatures
 	const double airTemp = 293.0;
@@ -40,11 +43,11 @@ namespace config {
 	const double emmisivity = 1.0;
 
 	// laser beam
-	const Vec3 laserVec = bodySize.dot(Vec3(0.8, 0.8, 1.0));
-	const Vec3 laserVel = Vec3(-1.0, 0.0, 0.0);
+	const Vec3 laserVec = bodySize.dot(Vec3(0.99, 0.5, 1.0));
+	const Vec3 laserVel = Vec3(-80.0, 0.0, 0.0);
 	const double laserRadius = 40e-6;
 	const double laserPower = 6000.0;
-	const std::string laserState = "on";
+	const bool laserState = true;
 
 	// calculated
 	//const Vec3 laserVelScaled = laserVel.multiply(timeStep);

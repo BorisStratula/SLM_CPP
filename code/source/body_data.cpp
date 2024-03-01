@@ -61,15 +61,16 @@ void BodyData::advance(const Mesh* const MESH) {
 		qDebug[elem] = MESH->elems[elem].qDebug;
 		MDebug[elem] = MESH->elems[elem].MDebug;
 		timesMelted[elem] = MESH->elems[elem].timesMelted;
-		if (MESH->elems[elem].state == "powder") {
-			state[elem] = 0;
-		}
-		else if (MESH->elems[elem].state == "liquid") {
-			state[elem] = 1;
-		}
-		else {
-			state[elem] = 2;
-		}
+		state[elem] = MESH->elems[elem].state;
+		//if (MESH->elems[elem].state == "powder") {
+		//	state[elem] = 0;
+		//}
+		//else if (MESH->elems[elem].state == "liquid") {
+		//	state[elem] = 1;
+		//}
+		//else {
+		//	state[elem] = 2;
+		//}
 	}
 }
 
