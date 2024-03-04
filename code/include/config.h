@@ -4,67 +4,69 @@
 #include <string>
 #include "../../lib/include/vec3.h"
 
-namespace config {
+class Config {
+public:
+	static void readConfig();
 	// processes
 	// 0 - no processes created, 1 and more - amount of manually created processes
-	extern size_t parallelProcesses;// = 8;
+	static size_t parallelProcesses;
 
 	//path
-	extern std::string projectDir;
+	static std::string projectDir;
 
 	// geometry
-	extern Vec3 bodySize;
-	extern Vec3 meshStep;
-	extern double powderThickness;
+	static Vec3 bodySize;
+	static Vec3 meshStep;
+	static double powderThickness;
 
 	//time
-	extern double startTime;
-	extern double timeStep;
-	extern double endTime;
+	static double startTime;
+	static double timeStep;
+	static double endTime;
 
 	// logging
-	extern uint32_t desiredLogEntries;
+	static uint32_t desiredLogEntries;
 
 	// temperatures
-	extern double airTemp;
-	extern double initialTemp;
-	extern double meltingTemp;
+	static double airTemp;
+	static double initialTemp;
+	static double meltingTemp;
 
 	// temperature flow
-	extern double fusionEnthalpy;
-	extern double solidRho;
-	extern double packingRho;
-	extern double liquidRho;
-	extern double solidC;
-	extern double liquidC;
-	extern double solidKA;
-	extern double solidKB;
-	extern double liquidKA;
-	extern double liquidKB;
+	static double fusionEnthalpy;
+	static double solidRho;
+	static double packingRho;
+	static double liquidRho;
+	static double solidC;
+	static double liquidC;
+	static double solidKA;
+	static double solidKB;
+	static double liquidKA;
+	static double liquidKB;
 
 	// radiant properties
-	extern double stefanBoltzmannConst;
-	extern double emmisivity;
+	static double stefanBoltzmannConst;
+	static double emmisivity;
 
 	// laser beam
-	extern Vec3 laserVec;
-	extern Vec3 laserVel;
-	extern double laserRadius;
-	extern double laserPower;
-	extern bool laserState;
+	static Vec3 laserVec;
+	static Vec3 laserVel;
+	static double laserRadius;
+	static double laserPower;
+	static bool laserState;
 
 	// calculated
 	//const Vec3 laserVelScaled = laserVel.multiply(timeStep);
-	extern double sigmoidConst;
-	extern double solidMass;
-	extern double liquidMass;
-	extern double enthalpyMinus;
-	extern double enthalpyPlus;
-	extern double mscs;
-	extern double mlcl;
-	extern double mscsRev;
-	extern double mlclRev;
-	extern double surfaceArea;
-	extern double radiantFluxConst;
-	extern double airTemp4;
-}
+	static double sigmoidConst;
+	static double solidMass;
+	static double liquidMass;
+	static double enthalpyMinus;
+	static double enthalpyPlus;
+	static double mscs;
+	static double mlcl;
+	static double mscsRev;
+	static double mlclRev;
+	static double surfaceArea;
+	static double radiantFluxConst;
+	static double airTemp4;
+};

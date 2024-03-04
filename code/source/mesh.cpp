@@ -8,7 +8,7 @@
 
 Mesh::Mesh(Laser* const LASER) {
 	resolution = returnResolution();
-	powderLayers = (uint32_t)round(config::powderThickness / config::meshStep.z);
+	powderLayers = (uint32_t)round(Config::powderThickness / Config::meshStep.z);
 	startPowderAtLayer = (uint32_t)resolution.z - powderLayers;
 	nodesArraySize = (1 + resolution.x) * (1 + resolution.y) * (1 + resolution.z);
 	elemsArraySize = resolution.x * resolution.y * resolution.z;
@@ -20,15 +20,15 @@ Mesh::Mesh(Laser* const LASER) {
 	Elem::meshPtr = this;
 	Elem::laserPtr = LASER;
 	createMesh();
-	if (config::parallelProcesses != 0) {
-		processors = new Processor * [config::parallelProcesses];
-		for (size_t i = 0; i < config::parallelProcesses; i++) {
+	if (Config::parallelProcesses != 0) {
+		processors = new Processor * [Config::parallelProcesses];
+		for (size_t i = 0; i < Config::parallelProcesses; i++) {
 			processors[i] = new Processor();
 		}
 		splitter.dataSize = elemsArraySize;
-		if (splitter.dataSize % config::parallelProcesses == 0) splitter.chunkSize = splitter.dataSize / config::parallelProcesses;
-		else splitter.chunkSize = splitter.dataSize / config::parallelProcesses / 2 + 1;
-		splitter.dataStep = splitter.chunkSize * config::parallelProcesses;
+		if (splitter.dataSize % Config::parallelProcesses == 0) splitter.chunkSize = splitter.dataSize / Config::parallelProcesses;
+		else splitter.chunkSize = splitter.dataSize / Config::parallelProcesses / 2 + 1;
+		splitter.dataStep = splitter.chunkSize * Config::parallelProcesses;
 		splitter.overflow = splitter.dataSize - 2 * splitter.dataStep;
 	}
 	else {
@@ -39,14 +39,14 @@ Mesh::Mesh(Laser* const LASER) {
 Mesh::~Mesh() {
 	if (nodes) delete[] nodes;
 	if (elems) delete[] elems;
-	for (size_t i = 0; i < config::parallelProcesses; i++) {
+	for (size_t i = 0; i < Config::parallelProcesses; i++) {
 		if (processors[i]) delete processors[i];
 	}
 	if (processors) delete processors;
 }
 
 void Mesh::advance() {
-	if (config::parallelProcesses == 0) advanceClassic();
+	if (Config::parallelProcesses == 0) advanceClassic();
 	else advanceInParallel();
 }
 
@@ -62,13 +62,13 @@ void Mesh::advanceClassic() {
 void Mesh::advanceInParallel() {
 	splitter.processedData = 0;
 	while (1) {
-		for (size_t i = 0; i < config::parallelProcesses; i++) {
+		for (size_t i = 0; i < Config::parallelProcesses; i++) {
 			processors[i]->putData(&elems[i * splitter.chunkSize + splitter.processedData], splitter.chunkSize);
 		}
 		splitter.processedData += splitter.dataStep;
 		while (1) {
 			bool finished = true;
-			for (size_t i = 0; i < config::parallelProcesses; i++) {
+			for (size_t i = 0; i < Config::parallelProcesses; i++) {
 				if (!processors[i]->isReady()) {
 					finished = false;
 					break;
@@ -152,8 +152,8 @@ void Mesh::createMesh() {
 }
 
 IntVec3 Mesh::returnResolution() const {
-	int32_t xRes = (uint32_t)round(config::bodySize.x / config::meshStep.x);
-	int32_t yRes = (uint32_t)round(config::bodySize.y / config::meshStep.y);
-	int32_t zRes = (uint32_t)round(config::bodySize.z / config::meshStep.z);
+	int32_t xRes = (uint32_t)round(Config::bodySize.x / Config::meshStep.x);
+	int32_t yRes = (uint32_t)round(Config::bodySize.y / Config::meshStep.y);
+	int32_t zRes = (uint32_t)round(Config::bodySize.z / Config::meshStep.z);
 	return IntVec3(xRes, yRes, zRes);
 }

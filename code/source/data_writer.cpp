@@ -5,7 +5,7 @@
 #include "../include/config.h"
 
 DataWriter::DataWriter() {
-    projectDir = config::projectDir;
+    projectDir = Config::projectDir;
     if (projectDir == "null") {
         auto currentPath = std::filesystem::current_path();
         projectDir = currentPath.generic_string();
@@ -25,14 +25,19 @@ void DataWriter::advance(const SimulationIterator& SIMULATION, const BodyData& B
 
 void DataWriter::prepareDir() const {
     try {
-        std::cout << std::filesystem::current_path() << std::endl;
         std::filesystem::remove_all(solutionDir);
     }
     catch (...) {
         std::cout << "Close solution files first\n";
         std::exit(1);
     }
-    std::filesystem::create_directory(solutionDir);
+    try {
+        std::filesystem::create_directory(solutionDir);
+    }
+    catch (...) {
+        std::cout << "Create project folder first\n";
+        std::exit(4);
+    }
 }
 
 std::string DataWriter::addPrefixZeroes(uint32_t value, uint32_t maxValue) const {

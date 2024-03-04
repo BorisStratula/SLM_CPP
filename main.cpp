@@ -5,6 +5,7 @@ int main()
 	printf("///////////////////////////////////////////////////////////////\n");
 	printf("// Selective Laser Melting (SLM) numerical modelling program //\n");
 	printf("///////////////////////////////////////////////////////////////\n");
+	Config::readConfig();
 	auto simulation = SimulationIterator();
 	auto laser = Laser();
 	auto mesh = Mesh(&laser);

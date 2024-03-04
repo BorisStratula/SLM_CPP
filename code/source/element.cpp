@@ -21,12 +21,12 @@ bool Elem::init(uint32_t _ID, const IntVec3& INDEX_VECTOR, const Neighbours& NEI
 	neighbours = NEIGHBOURS;
 	neighboursTruncated = NEIGHBOURS_TRUNCATED;
 	onSurface = neighboursTruncated.onSurface;
-	vec = config::meshStep.dot(INDEX_VECTOR);
+	vec = Config::meshStep.dot(INDEX_VECTOR);
 	state = STATE;
 	underLaser = 0;
 	timesMelted = 0;
 	wasProcessed = false;
-	T = config::initialTemp;
+	T = Config::initialTemp;
 	k = thermalConductivity();
 	H = HofT();
 	HFlow = 0.0;
@@ -41,40 +41,40 @@ bool Elem::valid() const {
 
 double Elem::thermalConductivity() const {
 	double sigmoidConst = 1;
-	if (state == 0) sigmoidConst = config::sigmoidConst;
-	if (T == config::meltingTemp) {
-		double a1 = config::solidKA;
-		double b1 = config::solidKB;
-		double a2 = config::liquidKA;
-		double b2 = config::liquidKB;
+	if (state == 0) sigmoidConst = Config::sigmoidConst;
+	if (T == Config::meltingTemp) {
+		double a1 = Config::solidKA;
+		double b1 = Config::solidKB;
+		double a2 = Config::liquidKA;
+		double b2 = Config::liquidKB;
 		double ks = (a1 * T + b1) * sigmoidConst;
 		double kl = a2 * T + b2;
-		return ks + (kl - ks) * (H - config::enthalpyMinus) / (config::enthalpyPlus - config::enthalpyMinus);
+		return ks + (kl - ks) * (H - Config::enthalpyMinus) / (Config::enthalpyPlus - Config::enthalpyMinus);
 	}
 	else {
 		double a;
 		double b;
-		if (T < config::meltingTemp) {
-			a = config::solidKA;
-			b = config::solidKB;
+		if (T < Config::meltingTemp) {
+			a = Config::solidKA;
+			b = Config::solidKB;
 		}
 		else {
-			a = config::liquidKA;
-			b = config::liquidKB;
+			a = Config::liquidKA;
+			b = Config::liquidKB;
 		}
 		return (a * T + b) * sigmoidConst;
 	}
 }
 
 double Elem::TofH() const {
-	if (H < config::enthalpyMinus) return H * config::mscsRev;
-	else if (H > config::enthalpyMinus and H <= config::enthalpyPlus) return config::meltingTemp;
-	else return config::meltingTemp + (H - config::enthalpyPlus) * config::mlclRev;
+	if (H < Config::enthalpyMinus) return H * Config::mscsRev;
+	else if (H > Config::enthalpyMinus and H <= Config::enthalpyPlus) return Config::meltingTemp;
+	else return Config::meltingTemp + (H - Config::enthalpyPlus) * Config::mlclRev;
 }
 
 double Elem::HofT() const {
-	if (T > config::meltingTemp) return config::mlcl * (T - config::meltingTemp) + config::enthalpyPlus;
-	else return config::mscs * T;
+	if (T > Config::meltingTemp) return Config::mlcl * (T - Config::meltingTemp) + Config::enthalpyPlus;
+	else return Config::mscs * T;
 }
 
 double Elem::enthalpyFlow() {
@@ -82,22 +82,22 @@ double Elem::enthalpyFlow() {
 	double thetaX = thetaI(neighboursTruncated.xPlus, neighboursTruncated.xMinus, 1, Elem::meshPtr);
 	double thetaY = thetaI(neighboursTruncated.yPlus, neighboursTruncated.yMinus, 2, Elem::meshPtr);
 	double thetaZ = thetaI(neighboursTruncated.zPlus, neighboursTruncated.zMinus, 3, Elem::meshPtr);
-	double theta = config::surfaceArea * (thetaX + thetaY + thetaZ);
+	double theta = Config::surfaceArea * (thetaX + thetaY + thetaZ);
 	double q = 0;
 	if (neighbours.zPlus == -1) q = Elem::laserPtr->heatToElem(this);
 	qDebug = q;
 	double M = radiantFlux();
 	MDebug = M;
 	double FExt = q - M;
-	double enthalpyFlow = (theta + FExt)*config::timeStep;
+	double enthalpyFlow = (theta + FExt)* Config::timeStep;
 	return enthalpyFlow;
 }
 
 double Elem::thetaI(int32_t forwardID, int32_t backwardID, uint32_t axis, const Mesh* const MESH) const {
 	double h;
-	if (axis == 1) h = config::meshStep.x;
-	else if (axis == 2) h = config::meshStep.y;
-	else h = config::meshStep.z;
+	if (axis == 1) h = Config::meshStep.x;
+	else if (axis == 2) h = Config::meshStep.y;
+	else h = Config::meshStep.z;
 	double divider = 2 * h * h;
 	return (thetaF(forwardID, MESH) - thetaB(backwardID, MESH)) / divider;
 }
@@ -112,17 +112,17 @@ double Elem::thetaB(int32_t backwardID, const Mesh* const MESH) const {
 
 double Elem::radiantFlux() const {
 	if (onSurface == 0) return 0;
-	else return onSurface * config::surfaceArea * config::radiantFluxConst * (T * T * T * T - config::airTemp4);
+	else return onSurface * Config::surfaceArea * Config::radiantFluxConst * (T * T * T * T - Config::airTemp4);
 }
 
 void Elem::chechState() {
-	if (T > config::meltingTemp) {
+	if (T > Config::meltingTemp) {
 		if (state == 2 or state == 0) {
 			state = 1;
 			timesMelted += 1;
 		}
 	}
-	if (T < config::meltingTemp) {
+	if (T < Config::meltingTemp) {
 		if (state == 1) {
 			state = 2;
 		}

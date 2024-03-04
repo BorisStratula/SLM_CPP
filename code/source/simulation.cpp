@@ -3,14 +3,14 @@
 #include "../include/config.h"
 
 SimulationIterator::SimulationIterator() {
-	start = config::startTime;
-	end = config::endTime;
-	step = config::timeStep;
+	start = Config::startTime;
+	end = Config::endTime;
+	step = Config::timeStep;
 	now = start;
 	iteration = 0;
 	iterationLogger = 0;
 	totalIterations = (uint32_t)std::round((end - start) / step);
-	desiredLogEntries = config::desiredLogEntries - 1;
+	desiredLogEntries = Config::desiredLogEntries - 1;
 	maxDigits = digitsInValue(desiredLogEntries);
 	logEvery = (uint32_t)round((double)totalIterations / (double)desiredLogEntries);
 	logThisStep = false;

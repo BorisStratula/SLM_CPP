@@ -5,23 +5,40 @@
 
 #include "../include/config.h"
 
-
-namespace config {
-	double sigmoid(double x) {
-		return 1 / (1 + std::exp(-12.0 * x + 6.0));
-	}
-
+void Config::readConfig() {
 	using json = nlohmann::json;
-	std::ifstream rawFile("c:/Archive/Coding/C/test/CMakeProject1/example.json");
-	json processedFile{ json::parse(rawFile) };
+	auto currentPath = std::filesystem::current_path();
+	std::string exePath = currentPath.generic_string();
+	std::string localPath = exePath + "/config.json";
+	std::string externalPath = "c:/Archive/Work/ICAD/2024/modeling/slm_cpp/config.json";
+	std::ifstream localFile(localPath);
+	std::ifstream externalFile(externalPath);
+	std::string* stringPtr = nullptr;
+	if (localFile) {
+		stringPtr = &localPath;
+		printf("Local config file found\n");
+	}
+	else if (externalFile) {
+		stringPtr = &externalPath;
+		printf("No local config, but external config file found\n");
+	}
+	else {
+		printf("No config file\n");
+		delete stringPtr;
+		exit(3);
+	}
+	std::ifstream configFile(*stringPtr);
+	json processedFile{ json::parse(configFile) };
 	//
 
 	// processes
 	// 0 - no processes created, 1 and more - amount of manually created processes
-	size_t parallelProcesses{ processedFile["processes"]["in parallel"] };
+	size_t pp{ processedFile["processes"]["in parallel"] };
+	parallelProcesses = pp;
 
 	//path
-	std::string projectDir{ processedFile["path to project"] };
+	std::string prDir{ processedFile["path to project"] };
+	projectDir = prDir;
 
 	// geometry
 	double x1{ processedFile["geometry"]["size"]["x"] };
@@ -31,29 +48,29 @@ namespace config {
 	double y2 = { processedFile["geometry"]["step"]["y"] };
 	double z2 = { processedFile["geometry"]["step"]["z"] };
 	double pt{ processedFile["geometry"]["powder thickness"] };
-	Vec3 bodySize = Vec3(x1, y1, z1);
-	Vec3 meshStep = Vec3(x2, y2, z2);
-	double powderThickness = pt;
+	bodySize = Vec3(x1, y1, z1);
+	meshStep = Vec3(x2, y2, z2);
+	powderThickness = pt;
 
 	//time
 	double st{ processedFile["time"]["start"] };
 	double ts{ processedFile["time"]["step"] };
 	double iter{ processedFile["time"]["iterations"] };
-	double startTime = st;
-	double timeStep = ts;
-	double endTime = timeStep * iter;
+	startTime = st;
+	timeStep = ts;
+	endTime = timeStep * iter;
 
 	// logging
 	uint32_t dle{ processedFile["logging"]["log entries"] };
-	uint32_t desiredLogEntries = dle;
+	desiredLogEntries = dle;
 
 	// temperatures
 	double at{ processedFile["temperatures"]["air"] };
 	double it{ processedFile["temperatures"]["initial"] };
 	double mt{ processedFile["temperatures"]["melting"] };
-	double airTemp = at;
-	double initialTemp = it;
-	double meltingTemp = mt;
+	airTemp = at;
+	initialTemp = it;
+	meltingTemp = mt;
 
 	// temperature flow
 	double fe{ processedFile["temperature flow"]["enthalpy of fusion"] };
@@ -66,21 +83,21 @@ namespace config {
 	double skb{ processedFile["temperature flow"]["solid KB"] };
 	double lka{ processedFile["temperature flow"]["liquid KA"] };
 	double lkb{ processedFile["temperature flow"]["liquid KB"] };
-	double fusionEnthalpy = fe;
-	double solidRho = sr;
-	double packingRho = pr;
-	double liquidRho = lr;
-	double solidC = sc;
-	double liquidC = lc;
-	double solidKA = ska;
-	double solidKB = skb;
-	double liquidKA = lka;
-	double liquidKB = lkb;
+	fusionEnthalpy = fe;
+	solidRho = sr;
+	packingRho = pr;
+	liquidRho = lr;
+	solidC = sc;
+	liquidC = lc;
+	solidKA = ska;
+	solidKB = skb;
+	liquidKA = lka;
+	liquidKB = lkb;
 
 	// radiant properties
 	double emm{ processedFile["radiant properties"]["emmisivity"] };
-	double stefanBoltzmannConst = 5.67e-8;
-	double emmisivity = emm;
+	stefanBoltzmannConst = 5.67e-8;
+	emmisivity = emm;
 
 	// laser beam
 	double x3{ processedFile["laser beam"]["location"]["relative x"] };
@@ -92,24 +109,66 @@ namespace config {
 	double r{ processedFile["laser beam"]["radius"] };
 	double p{ processedFile["laser beam"]["power"] };
 	bool s{ processedFile["laser beam"]["is ON"] };
-	Vec3 laserVec = bodySize.dot(Vec3(x3, y3, z3));
-	Vec3 laserVel = Vec3(vx, vy, vz);
-	double laserRadius = r;
-	double laserPower = p;
-	bool laserState = s;
+	laserVec = bodySize.dot(Vec3(x3, y3, z3));
+	laserVel = Vec3(vx, vy, vz);
+	laserRadius = r;
+	laserPower = p;
+	laserState = s;
 
 	// calculated
 	//const Vec3 laserVelScaled = laserVel.multiply(timeStep);
-	double sigmoidConst = sigmoid(packingRho);//0.858148935;
-	double solidMass = meshStep.x * meshStep.y * meshStep.z * solidRho;
-	double liquidMass = meshStep.x * meshStep.y * meshStep.z * liquidRho;
-	double enthalpyMinus = solidMass * solidC * meltingTemp;
-	double enthalpyPlus = enthalpyMinus + solidMass * fusionEnthalpy;
-	double mscs = solidMass * solidC;
-	double mlcl = liquidMass * liquidC;
-	double mscsRev = 1 / mscs;
-	double mlclRev = 1 / mlcl;
-	double surfaceArea = meshStep.x * meshStep.y;
-	double radiantFluxConst = stefanBoltzmannConst * emmisivity;
-	double airTemp4 = airTemp * airTemp * airTemp * airTemp;
+	sigmoidConst = 0.858148935;
+	solidMass = meshStep.x * meshStep.y * meshStep.z * solidRho;
+	liquidMass = meshStep.x * meshStep.y * meshStep.z * liquidRho;
+	enthalpyMinus = solidMass * solidC * meltingTemp;
+	enthalpyPlus = enthalpyMinus + solidMass * fusionEnthalpy;
+	mscs = solidMass * solidC;
+	mlcl = liquidMass * liquidC;
+	mscsRev = 1 / mscs;
+	mlclRev = 1 / mlcl;
+	surfaceArea = meshStep.x * meshStep.y;
+	radiantFluxConst = stefanBoltzmannConst * emmisivity;
+	airTemp4 = airTemp * airTemp * airTemp * airTemp;
 }
+
+size_t Config::parallelProcesses = 0;
+std::string Config::projectDir = "null";
+Vec3 Config::bodySize = Vec3();
+Vec3 Config::meshStep = Vec3();
+double Config::powderThickness = 0.0;
+double Config::startTime = 0.0;
+double Config::timeStep = 0.0;
+double Config::endTime = 0.0;
+uint32_t Config::desiredLogEntries = 0;
+double Config::airTemp = 0.0;
+double Config::initialTemp = 0.0;
+double Config::meltingTemp = 0.0;
+double Config::fusionEnthalpy = 0.0;
+double Config::solidRho = 0.0;
+double Config::packingRho = 0.0;
+double Config::liquidRho = 0.0;
+double Config::solidC = 0.0;
+double Config::liquidC = 0.0;
+double Config::solidKA = 0.0;
+double Config::solidKB = 0.0;
+double Config::liquidKA = 0.0;
+double Config::liquidKB = 0.0;
+double Config::stefanBoltzmannConst = 0.0;
+double Config::emmisivity = 0.0;
+Vec3 Config::laserVec = Vec3();
+Vec3 Config::laserVel = Vec3();
+double Config::laserRadius = 0.0;
+double Config::laserPower = 0.0;
+bool Config::laserState = 0.0;
+double Config::sigmoidConst = 0.0;
+double Config::solidMass = 0.0;
+double Config::liquidMass = 0.0;
+double Config::enthalpyMinus = 0.0;
+double Config::enthalpyPlus = 0.0;
+double Config::mscs = 0.0;
+double Config::mlcl = 0.0;
+double Config::mscsRev = 0.0;
+double Config::mlclRev = 0.0;
+double Config::surfaceArea = 0.0;
+double Config::radiantFluxConst = 0.0;
+double Config::airTemp4 = 0.0;

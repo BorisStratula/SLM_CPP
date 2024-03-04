@@ -1,0 +1,66 @@
+{
+  "processes": {
+	  "in parallel": 8
+  },
+  "path to project": "C:/del/003",
+  "geometry": {
+	  "size": {
+		  "x": 6000e-6,
+		  "y": 200e-6,
+		  "z": 200e-6
+	  },
+	  "step": {
+		  "x": 20e-6,
+		  "y": 20e-6,
+		  "z": 20e-6
+	  },
+	  "powder thickness": 100e-6
+  },
+  "thermal properties": {
+	  "solid rho": 4400
+  },
+  "time": {
+	  "start": 0,
+	  "step": 1e-10,
+	  "iterations": 1000000
+  },
+  "logging": {
+	  "log entries": 100
+  },
+  "temperatures": {
+	  "air": 293,
+	  "initial": 1500,
+	  "melting": 1923
+  },
+  "temperature flow": {
+	  "enthalpy of fusion": 286000,
+	  "solid rho": 4400,
+	  "packing rho": 0.65,
+	  "liquid rho": 3900,
+	  "solid C": 770,
+	  "liquid C": 1150,
+	  "solid KA": 0.01463,
+	  "solid KB": -0.53614,
+	  "liquid KA": 0.01808,
+	  "liquid KB": -6.12967
+  },
+  "radiant properties": {
+	  "emmisivity": 1
+  },
+  "laser beam": {
+	  "location": {
+		  "relative x": 0.99,
+		  "relative y": 0.5,
+		  "relative z": 1.0
+	  },
+	  "velocity": {
+		  "x": -1,
+		  "y": 0,
+		  "z": 0
+	  },
+	  "radius": 40e-6,
+	  "power": 6000,
+	  "is ON": true
+  }
+  
+}
