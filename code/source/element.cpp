@@ -4,6 +4,9 @@
 #include "../include/mesh.h"
 #include "../include/laser.h"
 
+Mesh* Elem::meshPtr = nullptr;
+Laser* Elem::laserPtr = nullptr;
+
 Elem::~Elem() {
 	if (vertices) {
 		delete[] vertices;
@@ -22,6 +25,7 @@ bool Elem::init(uint32_t _ID, const IntVec3& INDEX_VECTOR, const Neighbours& NEI
 	state = STATE;
 	underLaser = 0;
 	timesMelted = 0;
+	wasProcessed = false;
 	T = config::initialTemp;
 	k = thermalConductivity();
 	H = HofT();
@@ -73,13 +77,14 @@ double Elem::HofT() const {
 	else return config::mscs * T;
 }
 
-double Elem::enthalpyFlow(const Mesh* const MESH, const Laser* const LASER) {
-	double thetaX = thetaI(neighboursTruncated.xPlus, neighboursTruncated.xMinus, 1, MESH);
-	double thetaY = thetaI(neighboursTruncated.yPlus, neighboursTruncated.yMinus, 2, MESH);
-	double thetaZ = thetaI(neighboursTruncated.zPlus, neighboursTruncated.zMinus, 3, MESH);
+double Elem::enthalpyFlow() {
+	wasProcessed = false;
+	double thetaX = thetaI(neighboursTruncated.xPlus, neighboursTruncated.xMinus, 1, Elem::meshPtr);
+	double thetaY = thetaI(neighboursTruncated.yPlus, neighboursTruncated.yMinus, 2, Elem::meshPtr);
+	double thetaZ = thetaI(neighboursTruncated.zPlus, neighboursTruncated.zMinus, 3, Elem::meshPtr);
 	double theta = config::surfaceArea * (thetaX + thetaY + thetaZ);
 	double q = 0;
-	if (neighbours.zPlus == -1) q = LASER->heatToElem(this);
+	if (neighbours.zPlus == -1) q = Elem::laserPtr->heatToElem(this);
 	qDebug = q;
 	double M = radiantFlux();
 	MDebug = M;
@@ -123,3 +128,19 @@ void Elem::chechState() {
 		}
 	}
 }
+
+void Elem::calcStep1() {
+	wasProcessed = false;
+	HFlow = enthalpyFlow();
+}
+
+void Elem::calcStep2() {
+	if (!wasProcessed) {
+		wasProcessed = true;
+		H += HFlow;
+		T = TofH();
+		k = thermalConductivity();
+		chechState();
+	}
+}
+

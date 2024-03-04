@@ -9,9 +9,21 @@
 class BodyData;
 class Laser;
 class Simulation;
+class Processor;
 
 class Mesh {
 public:
+
+	struct Splitter {
+		uint32_t dataSize;
+		uint32_t chunkSize;
+		uint32_t processedData;
+		uint32_t dataStep;
+		int32_t overflow;
+	};
+
+	Splitter splitter;
+
 	IntVec3 resolution;
 	uint32_t powderLayers;
 	uint32_t startPowderAtLayer;
@@ -21,11 +33,13 @@ public:
 	Elem* elems = nullptr;
 	uint32_t currentNodeID;
 	uint32_t currentElemID;
+	Processor** processors = nullptr;
 
-	Mesh();
+	Mesh(Laser* const LASER);
 	~Mesh();
 
 	void advance(const Laser* const LASER, BodyData* const bodyData);
+	void advanceInParallel(const Laser* const LASER, BodyData* const bodyData);
 	void createElement(uint32_t elemID, const IntVec3& INDEX_VEC, const Neighbours& NEIGHBOURS, const Neighbours& NEIGHBOURS_TRUNCATED, const uint32_t STATE);
 	void createNode(uint32_t nodeID, uint32_t nodePos, const Vec3& ANCHOR_VEC);
 	uint32_t findNodeForElement(uint32_t nodePos, const Vec3& elemVec, const Neighbours& NEIGHBOURS);

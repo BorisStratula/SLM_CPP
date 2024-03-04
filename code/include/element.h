@@ -19,12 +19,15 @@ public:
 	uint32_t state = 0; // 0 == powder, 1 == liquid, 2 == solid
 	uint32_t underLaser = 0;
 	uint32_t timesMelted = 0;
+	bool wasProcessed = false;
 	double T = 0.0;
 	double k = 0.0;
 	double H = 0.0;
 	double HFlow = 0.0;
 	double qDebug = 0.0;
 	double MDebug = 0.0;
+	static Mesh* meshPtr;
+	static Laser* laserPtr;
 
 	~Elem();
 
@@ -34,10 +37,12 @@ public:
 	double thermalConductivity() const;
 	double TofH() const;
 	double HofT() const;
-	double enthalpyFlow(const Mesh* const MESH, const Laser* const LASER);
+	double enthalpyFlow();
 	double thetaI(int32_t forwardID, int32_t backwardID, uint32_t axis, const Mesh* const MESH) const;
 	double thetaF(int32_t forwardID, const Mesh* const MESH) const;
 	double thetaB(int32_t backwardID, const Mesh* const MESH) const;
 	double radiantFlux() const;
 	void chechState();
+	void calcStep1();
+	void calcStep2();
 };

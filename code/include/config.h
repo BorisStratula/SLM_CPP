@@ -5,6 +5,9 @@
 #include "../../lib/include/vec3.h"
 
 namespace config {
+	// processes
+	const size_t parallelProcesses = 1;
+
 	//path
 	const std::string projectDir = "C:/del/03";
 

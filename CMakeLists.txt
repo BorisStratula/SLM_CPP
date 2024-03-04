@@ -28,6 +28,7 @@ set(SOURCES
 	"code/source/neighbours.cpp"
 	"code/source/node.cpp" 
 	"code/source/simulation.cpp"
+	"code/source/Processor.cpp"
 	)
 
 # Add source to this project's executable.
