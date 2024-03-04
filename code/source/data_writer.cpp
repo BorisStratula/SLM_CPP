@@ -6,6 +6,10 @@
 
 DataWriter::DataWriter() {
     projectDir = config::projectDir;
+    if (projectDir == "null") {
+        auto currentPath = std::filesystem::current_path();
+        projectDir = currentPath.generic_string();
+    }
     solutionDir = projectDir + "/solution";
     prepareDir();
 }
@@ -21,13 +25,13 @@ void DataWriter::advance(const SimulationIterator& SIMULATION, const BodyData& B
 
 void DataWriter::prepareDir() const {
     try {
-        std::filesystem::remove_all(projectDir);
+        std::cout << std::filesystem::current_path() << std::endl;
+        std::filesystem::remove_all(solutionDir);
     }
     catch (...) {
         std::cout << "Close solution files first\n";
         std::exit(1);
     }
-    std::filesystem::create_directory(projectDir);
     std::filesystem::create_directory(solutionDir);
 }
 

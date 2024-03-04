@@ -29,6 +29,7 @@ set(SOURCES
 	"code/source/node.cpp" 
 	"code/source/simulation.cpp"
 	"code/source/Processor.cpp"
+	"code/source/config.cpp"
 	)
 
 # Add source to this project's executable.
