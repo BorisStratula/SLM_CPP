@@ -2,7 +2,9 @@
 
 int main()
 {
-	printf("Calculation process has started\n");
+	printf("///////////////////////////////////////////////////////////////\n");
+	printf("// Selective Laser Melting (SLM) numerical modelling program //\n");
+	printf("///////////////////////////////////////////////////////////////\n");
 	auto simulation = SimulationIterator();
 	auto laser = Laser();
 	auto mesh = Mesh(&laser);
@@ -11,20 +13,20 @@ int main()
 	dataWriter.advance(simulation, bodyData);
 
 
-	while (simulation.stopSimulation != 1) {
+	while (!simulation.stopSimulation) {
 		simulation.advance();
-		mesh.advance(&laser, &bodyData);
-		//mesh.advanceInParallel(&laser, &bodyData);
-		//printf("%u\n", simulation.iteration);
+		mesh.advance();
 		laser.advance();
 
-		//if (bodyData.TMax > 1960.0) laser.state = "off";
+		if (bodyData.TMax > 1940.0) laser.state = false;
 
-		if (simulation.logThisStep == 1) {
+		if (simulation.logThisStep) {
 			bodyData.advance(&mesh);
 			dataWriter.advance(simulation, bodyData);
 		}
 	}
-	printf("Calculation process has started\n");
+	printf("//////////////////////////\n");
+	printf("// Program has finished //\n");
+	printf("//////////////////////////\n");
 	return 0;
 }

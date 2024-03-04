@@ -38,8 +38,9 @@ public:
 	Mesh(Laser* const LASER);
 	~Mesh();
 
-	void advance(const Laser* const LASER, BodyData* const bodyData);
-	void advanceInParallel(const Laser* const LASER, BodyData* const bodyData);
+	void advance();
+	void advanceClassic();
+	void advanceInParallel();
 	void createElement(uint32_t elemID, const IntVec3& INDEX_VEC, const Neighbours& NEIGHBOURS, const Neighbours& NEIGHBOURS_TRUNCATED, const uint32_t STATE);
 	void createNode(uint32_t nodeID, uint32_t nodePos, const Vec3& ANCHOR_VEC);
 	uint32_t findNodeForElement(uint32_t nodePos, const Vec3& elemVec, const Neighbours& NEIGHBOURS);

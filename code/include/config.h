@@ -6,13 +6,14 @@
 
 namespace config {
 	// processes
-	const size_t parallelProcesses = 1;
+	// 0 - no processes created, 1 and more - amount of manually created processes
+	const size_t parallelProcesses = 8;
 
 	//path
 	const std::string projectDir = "C:/del/03";
 
 	// geometry
-	const Vec3 bodySize = Vec3(6000e-6, 20e-6, 600e-6);
+	const Vec3 bodySize = Vec3(6000e-6, 200e-6, 200e-6);
 	const Vec3 meshStep = Vec3(20e-6, 20e-6, 20e-6);
 	const double powderThickness = 100e-6;
 
@@ -47,7 +48,7 @@ namespace config {
 
 	// laser beam
 	const Vec3 laserVec = bodySize.dot(Vec3(0.99, 0.5, 1.0));
-	const Vec3 laserVel = Vec3(-80.0, 0.0, 0.0);
+	const Vec3 laserVel = Vec3(-1.0, 0.0, 0.0);
 	const double laserRadius = 40e-6;
 	const double laserPower = 6000.0;
 	const bool laserState = true;

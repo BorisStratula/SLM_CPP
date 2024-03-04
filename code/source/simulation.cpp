@@ -13,8 +13,8 @@ SimulationIterator::SimulationIterator() {
 	desiredLogEntries = config::desiredLogEntries - 1;
 	maxDigits = digitsInValue(desiredLogEntries);
 	logEvery = (uint32_t)round((double)totalIterations / (double)desiredLogEntries);
-	logThisStep = 0;
-	stopSimulation = 0;
+	logThisStep = false;
+	stopSimulation = false;
 	timer.start();
 }
 
@@ -26,15 +26,15 @@ void SimulationIterator::advance() {
 	now += step;
 	iteration += 1;
 	if (iteration % logEvery == 0) {
-		logThisStep = 1;
+		logThisStep = true;
 		iterationLogger += 1;
 		std::cout << info() << '\n';
 		if (iterationLogger == desiredLogEntries) {
-			stopSimulation = 1;
+			stopSimulation = true;
 		}
 	}
 	else {
-		logThisStep = 0;
+		logThisStep = false;
 	}
 }
 

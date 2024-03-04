@@ -17,8 +17,8 @@ public:
 	uint32_t desiredLogEntries;
 	uint32_t maxDigits;
 	uint32_t logEvery;
-	uint32_t logThisStep;
-	uint32_t stopSimulation;
+	bool logThisStep;
+	bool stopSimulation;
 	Timer timer;
 
 	SimulationIterator();

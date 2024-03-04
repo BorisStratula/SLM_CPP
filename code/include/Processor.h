@@ -8,7 +8,6 @@ public:
 	std::mutex mtx;
 	Elem* data = nullptr;
 	size_t count;
-	uint32_t calcStage;
 
 	Processor();
 	~Processor();

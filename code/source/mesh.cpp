@@ -20,15 +20,20 @@ Mesh::Mesh(Laser* const LASER) {
 	Elem::meshPtr = this;
 	Elem::laserPtr = LASER;
 	createMesh();
-	processors = new Processor * [config::parallelProcesses];
-	for (size_t i = 0; i < config::parallelProcesses; i++) {
-		processors[i] = new Processor();
+	if (config::parallelProcesses != 0) {
+		processors = new Processor * [config::parallelProcesses];
+		for (size_t i = 0; i < config::parallelProcesses; i++) {
+			processors[i] = new Processor();
+		}
+		splitter.dataSize = elemsArraySize;
+		if (splitter.dataSize % config::parallelProcesses == 0) splitter.chunkSize = splitter.dataSize / config::parallelProcesses;
+		else splitter.chunkSize = splitter.dataSize / config::parallelProcesses / 2 + 1;
+		splitter.dataStep = splitter.chunkSize * config::parallelProcesses;
+		splitter.overflow = splitter.dataSize - 2 * splitter.dataStep;
 	}
-	splitter.dataSize = elemsArraySize;
-	if (splitter.dataSize % config::parallelProcesses == 0) splitter.chunkSize = splitter.dataSize / config::parallelProcesses;
-	else splitter.chunkSize = splitter.dataSize / config::parallelProcesses / 2 + 1;
-	splitter.dataStep = splitter.chunkSize * config::parallelProcesses;
-	splitter.overflow = splitter.dataSize - 2 * splitter.dataStep;
+	else {
+		processors = nullptr;
+	}
 }
 
 Mesh::~Mesh() {
@@ -40,45 +45,46 @@ Mesh::~Mesh() {
 	if (processors) delete processors;
 }
 
-void Mesh::advance(const Laser* const LASER, BodyData* const bodyData) {
+void Mesh::advance() {
+	if (config::parallelProcesses == 0) advanceClassic();
+	else advanceInParallel();
+}
+
+void Mesh::advanceClassic() {
 	for (uint32_t elem = 0; elem < elemsArraySize; elem++) {
 		elems[elem].calcStep1();
 	}
 	for (uint32_t elem = 0; elem < elemsArraySize; elem++) {
 		elems[elem].calcStep2();
-		//if (elems[elem].T > bodyData->TMax) bodyData->TMax = elems[elem].T;
 	}
 }
 
-void Mesh::advanceInParallel(const Laser* const LASER, BodyData* const bodyData) {
-	for (size_t calcStage = 1; calcStage < 3; calcStage++) {
-		splitter.processedData = 0;
+void Mesh::advanceInParallel() {
+	splitter.processedData = 0;
+	while (1) {
+		for (size_t i = 0; i < config::parallelProcesses; i++) {
+			processors[i]->putData(&elems[i * splitter.chunkSize + splitter.processedData], splitter.chunkSize);
+		}
+		splitter.processedData += splitter.dataStep;
 		while (1) {
+			bool finished = true;
 			for (size_t i = 0; i < config::parallelProcesses; i++) {
-				processors[i]->calcStage = calcStage;
-				processors[i]->putData(&elems[i * splitter.chunkSize + splitter.processedData], splitter.chunkSize);
-			}
-			splitter.processedData += splitter.dataStep;
-			while (1) {
-				bool finished = true;
-				for (size_t i = 0; i < config::parallelProcesses; i++) {
-					if (!processors[i]->isReady()) {
-						finished = false;
-						break;
-					}
-				}
-				if (finished) {
+				if (!processors[i]->isReady()) {
+					finished = false;
 					break;
 				}
-				else {
-					std::this_thread::sleep_for(std::chrono::milliseconds(1));
-				}
 			}
-			if (splitter.processedData == splitter.dataSize) {
+			if (finished) {
 				break;
 			}
-			splitter.processedData += splitter.overflow; // overlap correction when we have to do 2 passes because we can not divide data between processes for only 1 pass
+			else {
+				std::this_thread::sleep_for(std::chrono::milliseconds(1));
+			}
 		}
+		if (splitter.processedData == splitter.dataSize) {
+			break;
+		}
+		splitter.processedData += splitter.overflow; // overlap correction when we have to do 2 passes because we can not divide data between processes for only 1 pass
 	}
 }
 
