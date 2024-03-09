@@ -5,7 +5,7 @@
 #include "../include/config.h"
 
 DataWriter::DataWriter() {
-    projectDir = Config::projectDir;
+    projectDir = Config::Directory::project;
     if (projectDir == "null") {
         auto currentPath = std::filesystem::current_path();
         projectDir = currentPath.generic_string();
@@ -82,7 +82,7 @@ void DataWriter::combineSolutionFiles(uint32_t iteration, uint32_t totalIteratio
     str += "  <Collection>\n";
     for (uint32_t entry = 0; entry < (iteration + 1); entry++) {
         number = addPrefixZeroes(entry, totalIterations);
-        str += std::format("    <DataSet step=\"{}\" part=\"0\" file=\"solution/data_{}.vtu\" name=\"Asmb: Part: Matl:ELASTIC\"/>\n", entry, number);
+        str += std::format("    <DataSet timestep=\"{}\" part=\"0\" file=\"solution/data_{}.vtu\" name=\"Asmb: Part: Matl:ELASTIC\"/>\n", entry, number);
     }
     str += "  </Collection>\n";
     str += "</VTKFile>";

@@ -19,13 +19,15 @@ int main()
 		mesh.advance();
 		laser.advance();
 
-		if (bodyData.TMax > 1940.0) laser.state = false;
+		if (bodyData.TMax > Config::Temperature::cutOff) laser.state = false;
 
 		if (simulation.logThisStep) {
 			bodyData.advance(&mesh);
 			dataWriter.advance(simulation, bodyData);
 		}
 	}
+
+
 	printf("//////////////////////////\n");
 	printf("// Program has finished //\n");
 	printf("//////////////////////////\n");

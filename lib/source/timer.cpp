@@ -58,12 +58,12 @@ double Timer::left(uint32_t iterationsNow, uint32_t iterationsTotal) {
 
 std::string Timer::formatElapsed() {
 	update();
-	std::string formatElapsedTime = "E " + formatTime(timeCumulative);
+	std::string formatElapsedTime = "Elapsed " + formatTime(timeCumulative);
 	return formatElapsedTime;
 }
 
 std::string Timer::formatLeft(uint32_t iterationsNow, uint32_t iterationsTotal) {
-	std::string formatLeft = "L " + formatTime(left(iterationsNow, iterationsTotal));
+	std::string formatLeft = "Left " + formatTime(left(iterationsNow, iterationsTotal));
 	return formatLeft;
 }
 

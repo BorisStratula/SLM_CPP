@@ -8,7 +8,7 @@
 
 Mesh::Mesh(Laser* const LASER) {
 	resolution = returnResolution();
-	powderLayers = (uint32_t)round(Config::powderThickness / Config::meshStep.z);
+	powderLayers = (uint32_t)round(Config::Geometry::powderThickness / Config::Geometry::step.z);
 	startPowderAtLayer = (uint32_t)resolution.z - powderLayers;
 	nodesArraySize = (1 + resolution.x) * (1 + resolution.y) * (1 + resolution.z);
 	elemsArraySize = resolution.x * resolution.y * resolution.z;
@@ -20,15 +20,15 @@ Mesh::Mesh(Laser* const LASER) {
 	Elem::meshPtr = this;
 	Elem::laserPtr = LASER;
 	createMesh();
-	if (Config::parallelProcesses != 0) {
-		processors = new Processor * [Config::parallelProcesses];
-		for (size_t i = 0; i < Config::parallelProcesses; i++) {
+	if (Config::Processes::inParallel != 0) {
+		processors = new Processor * [Config::Processes::inParallel];
+		for (size_t i = 0; i < Config::Processes::inParallel; i++) {
 			processors[i] = new Processor();
 		}
 		splitter.dataSize = elemsArraySize;
-		if (splitter.dataSize % Config::parallelProcesses == 0) splitter.chunkSize = splitter.dataSize / Config::parallelProcesses;
-		else splitter.chunkSize = splitter.dataSize / Config::parallelProcesses / 2 + 1;
-		splitter.dataStep = splitter.chunkSize * Config::parallelProcesses;
+		if (splitter.dataSize % Config::Processes::inParallel == 0) splitter.chunkSize = splitter.dataSize / Config::Processes::inParallel;
+		else splitter.chunkSize = splitter.dataSize / Config::Processes::inParallel / 2 + 1;
+		splitter.dataStep = splitter.chunkSize * Config::Processes::inParallel;
 		splitter.overflow = splitter.dataSize - 2 * splitter.dataStep;
 	}
 	else {
@@ -39,14 +39,14 @@ Mesh::Mesh(Laser* const LASER) {
 Mesh::~Mesh() {
 	if (nodes) delete[] nodes;
 	if (elems) delete[] elems;
-	for (size_t i = 0; i < Config::parallelProcesses; i++) {
+	for (size_t i = 0; i < Config::Processes::inParallel; i++) {
 		if (processors[i]) delete processors[i];
 	}
 	if (processors) delete processors;
 }
 
 void Mesh::advance() {
-	if (Config::parallelProcesses == 0) advanceClassic();
+	if (Config::Processes::inParallel == 0) advanceClassic();
 	else advanceInParallel();
 }
 
@@ -62,13 +62,13 @@ void Mesh::advanceClassic() {
 void Mesh::advanceInParallel() {
 	splitter.processedData = 0;
 	while (1) {
-		for (size_t i = 0; i < Config::parallelProcesses; i++) {
+		for (size_t i = 0; i < Config::Processes::inParallel; i++) {
 			processors[i]->putData(&elems[i * splitter.chunkSize + splitter.processedData], splitter.chunkSize);
 		}
 		splitter.processedData += splitter.dataStep;
 		while (1) {
 			bool finished = true;
-			for (size_t i = 0; i < Config::parallelProcesses; i++) {
+			for (size_t i = 0; i < Config::Processes::inParallel; i++) {
 				if (!processors[i]->isReady()) {
 					finished = false;
 					break;
@@ -78,7 +78,7 @@ void Mesh::advanceInParallel() {
 				break;
 			}
 			else {
-				std::this_thread::sleep_for(std::chrono::milliseconds(1));
+				//std::this_thread::sleep_for(std::chrono::milliseconds(1));
 			}
 		}
 		if (splitter.processedData == splitter.dataSize) {
@@ -148,12 +148,13 @@ void Mesh::createMesh() {
 			}
 		}
 	}
-	std::cout << "mesh created, " << timer.formatElapsed() << " elems = " << elemsArraySize << " nodes = " << nodesArraySize << '\n';
+	std::cout << "mesh created, " << timer.formatElapsed() << " elems = " << elemsArraySize << " nodes = " << nodesArraySize << std::endl;
+	std::cout << "mesh resolution " << resolution.x << "x" << resolution.y << "x" << resolution.z << " elems" << std::endl;
 }
 
 IntVec3 Mesh::returnResolution() const {
-	int32_t xRes = (uint32_t)round(Config::bodySize.x / Config::meshStep.x);
-	int32_t yRes = (uint32_t)round(Config::bodySize.y / Config::meshStep.y);
-	int32_t zRes = (uint32_t)round(Config::bodySize.z / Config::meshStep.z);
+	int32_t xRes = (uint32_t)round(Config::Geometry::size.x / Config::Geometry::step.x);
+	int32_t yRes = (uint32_t)round(Config::Geometry::size.y / Config::Geometry::step.y);
+	int32_t zRes = (uint32_t)round(Config::Geometry::size.z / Config::Geometry::step.z);
 	return IntVec3(xRes, yRes, zRes);
 }

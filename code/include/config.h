@@ -7,66 +7,94 @@
 class Config {
 public:
 	static void readConfig();
-	// processes
-	// 0 - no processes created, 1 and more - amount of manually created processes
-	static size_t parallelProcesses;
 
-	//path
-	static std::string projectDir;
+	struct Processes {
+		static uint32_t inParallel; // 0 - no processes created, 1 and more - amount of manually created processes
+	};
 
-	// geometry
-	static Vec3 bodySize;
-	static Vec3 meshStep;
-	static double powderThickness;
+	struct Directory {
+		static std::string project;
+	};
 
-	//time
-	static double startTime;
-	static double timeStep;
-	static double endTime;
+	struct Geometry {
+		static Vec3 size;
+		static Vec3 step;
+		static double powderThickness;
+		static double surfaceArea;
+	};
 
-	// logging
-	static uint32_t desiredLogEntries;
+	struct Time {
+		static double start;
+		static double step;
+		static double end;
+	};
 
-	// temperatures
-	static double airTemp;
-	static double initialTemp;
-	static double meltingTemp;
+	struct Log {
+		static uint32_t desiredEntries;
+	};
 
-	// temperature flow
-	static double fusionEnthalpy;
-	static double solidRho;
-	static double packingRho;
-	static double liquidRho;
-	static double solidC;
-	static double liquidC;
-	static double solidKA;
-	static double solidKB;
-	static double liquidKA;
-	static double liquidKB;
+	struct Temperature {
+		static double air;
+		static double air4;
+		static double initial;
+		static double melting;
+		static double cutOff;
+	};
 
-	// radiant properties
-	static double stefanBoltzmannConst;
-	static double emmisivity;
+	struct Mass {
+		struct Rho {
+			static double solid;
+			static double packing;
+			static double liquid;
+		};
+		static double solid;
+		static double liquid;
+	};
 
-	// laser beam
-	static Vec3 laserVec;
-	static Vec3 laserVel;
-	static double laserRadius;
-	static double laserPower;
-	static bool laserState;
+	struct Energy {
+		struct Solid {
+			static double C;
+			static double KA;
+			static double KB;
+			static double mc;
+			static double mcRev;
+		};
+		struct Liquid {
+			static double C;
+			static double KA;
+			static double KB;
+			static double mc;
+			static double mcRev;
+		};
+		struct Enthalpy {
+			static double minus;
+			static double fusion;
+			static double plus;
+		};
+	};
+
+	struct Radiation {
+		static double stefanBoltzmannConst;
+		static double emmisivity;
+		static double fluxConst;
+	};
+
+	struct Laser {
+		static Vec3 vec;
+		static Vec3 vel;
+		static double radius;
+		static double power;
+		static bool state;
+	};
+
+	struct Misc {
+		static double sigmoidConst;
+		static double coolingPowerPerNode;
+	};
 
 	// calculated
-	//const Vec3 laserVelScaled = laserVel.multiply(timeStep);
-	static double sigmoidConst;
-	static double solidMass;
-	static double liquidMass;
-	static double enthalpyMinus;
-	static double enthalpyPlus;
-	static double mscs;
-	static double mlcl;
-	static double mscsRev;
-	static double mlclRev;
-	static double surfaceArea;
-	static double radiantFluxConst;
-	static double airTemp4;
+	
+	
+	
+	
 };

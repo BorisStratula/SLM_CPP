@@ -5,13 +5,13 @@
 #include "../include/element.h"
 
 Laser::Laser() {
-	vec = Config::laserVec;
-	vel = Config::laserVel;
-	velScaled = vel.multiply(Config::timeStep);
-	radius = Config::laserRadius;
-	power = Config::laserPower;
-	state = Config::laserState;
-	precalcConst = Config::surfaceArea * power / M_PI / pow(radius, 2.0);
+	vec = Config::Laser::vec;
+	vel = Config::Laser::vel;
+	velScaled = vel.multiply(Config::Time::step);
+	radius = Config::Laser::radius;
+	power = Config::Laser::power;
+	state = Config::Laser::state;
+	precalcConst = Config::Geometry::surfaceArea * power / M_PI / pow(radius, 2.0);
 }
 
 Laser::~Laser() {

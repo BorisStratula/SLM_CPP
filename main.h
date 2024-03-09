@@ -17,4 +17,5 @@ EXIT CODES
 2 = Mesh::createElement
 3 = Config::readConfig
 4 = DataWriter::prepareDir
+5 = Config::readConfig
 */
